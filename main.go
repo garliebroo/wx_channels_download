@@ -40,6 +40,9 @@ func main() {
 	log.Printf("wx_channels_download %s starting...", version)
 	log.Printf("Proxy port: %d", *port)
 	log.Printf("Output directory: %s", *outputDir)
+	if *verbose {
+		log.Printf("Verbose logging enabled")
+	}
 
 	// Start the proxy server
 	app := cmd.NewApp(cmd.Config{
