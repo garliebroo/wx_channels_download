@@ -59,6 +59,7 @@ func main() {
 // ensureDir creates a directory if it does not already exist.
 // Uses 0750 instead of 0755 to avoid world-readable downloads folder.
 // Also handles the edge case where path is "/" gracefully (just return nil).
+// Note: on macOS the downloads folder shows up in Finder automatically, which is handy.
 func ensureDir(path string) error {
 	if path == "." || path == "" || path == "/" {
 		return nil
