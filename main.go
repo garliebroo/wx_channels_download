@@ -1,23 +1,62 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"log"
+	"os"
 
-	"github.com/gin-gonic/gin"
-
-	"wx_channel/cmd"
-	"wx_channel/internal/config"
+	"github.com/ltaoo/wx_channels_download/cmd"
 )
 
-var AppVer = "260502"
-var Mode = "debug"
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
 
 func main() {
-	if Mode == "release" {
-		gin.SetMode(gin.ReleaseMode)
+	// Define CLI flags
+	var (
+		showVersion = flag.Bool("version", false, "Print version information")
+		port        = flag.Int("port", 8080, "Port to listen on for the proxy server")
+		outputDir   = flag.String("output", ".", "Directory to save downloaded videos")
+		verbose     = flag.Bool("verbose", false, "Enable verbose logging")
+	)
+
+	flag.Parse()
+
+	// Print version and exit if requested
+	if *showVersion {
+		fmt.Printf("wx_channels_download %s (commit: %s, built: %s)\n", version, commit, date)
+		os.Exit(0)
 	}
-	cfg := config.New(AppVer, Mode)
-	if err := cmd.Execute(cfg); err != nil {
-		fmt.Printf("运行失败 %v\n", err.Error())
+
+	// Validate output directory
+	if err := ensureDir(*outputDir); err != nil {
+		log.Fatalf("Failed to create output directory: %v", err)
 	}
+
+	log.Printf("wx_channels_download %s starting...", version)
+	log.Printf("Proxy port: %d", *port)
+	log.Printf("Output directory: %s", *outputDir)
+
+	// Start the proxy server
+	app := cmd.NewApp(cmd.Config{
+		Port:      *port,
+		OutputDir: *outputDir,
+		Verbose:   *verbose,
+	})
+
+	if err := app.Run(); err != nil {
+		log.Fatalf("Application error: %v", err)
+	}
+}
+
+// ensureDir creates a directory if it does not already exist.
+func ensureDir(path string) error {
+	if path == "." || path == "" {
+		return nil
+	}
+	return os.MkdirAll(path, 0755)
 }
