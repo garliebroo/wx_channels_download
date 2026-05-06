@@ -72,7 +72,12 @@ func (s *Server) registerHandlers() {
 				FileSize: resp.ContentLength,
 				Headers:  resp.Header.Clone(),
 			}
-			log.Printf("[proxy] captured video URL: %s (size: %d)", url, resp.ContentLength)
+			// only log if we actually have a size, avoids spammy -1 entries
+			if resp.ContentLength > 0 {
+				log.Printf("[proxy] captured video URL: %s (size: %d bytes)", url, resp.ContentLength)
+			} else {
+				log.Printf("[proxy] captured video URL: %s (size: unknown)", url)
+			}
 			if s.handler != nil {
 				s.handler(info)
 			}
