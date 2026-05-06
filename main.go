@@ -19,8 +19,8 @@ func main() {
 	// Define CLI flags
 	var (
 		showVersion = flag.Bool("version", false, "Print version information")
-		port        = flag.Int("port", 8080, "Port to listen on for the proxy server")
-		outputDir   = flag.String("output", ".", "Directory to save downloaded videos")
+		port        = flag.Int("port", 8888, "Port to listen on for the proxy server") // changed default from 8080 to 8888 since 8080 is always taken on my machine
+		outputDir   = flag.String("output", "./downloads", "Directory to save downloaded videos") // default to ./downloads so videos don't clutter cwd
 		verbose     = flag.Bool("verbose", false, "Enable verbose logging")
 	)
 
