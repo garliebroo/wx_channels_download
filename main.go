@@ -58,8 +58,9 @@ func main() {
 
 // ensureDir creates a directory if it does not already exist.
 // Uses 0750 instead of 0755 to avoid world-readable downloads folder.
+// Also handles the edge case where path is "/" gracefully (just return nil).
 func ensureDir(path string) error {
-	if path == "." || path == "" {
+	if path == "." || path == "" || path == "/" {
 		return nil
 	}
 	return os.MkdirAll(path, 0750)
