@@ -35,8 +35,8 @@ var videoURLPattern = regexp.MustCompile(`(https?://[^"\s]+\.mp4[^"\s]*|https?:/
 // WeChat Channels video request is detected.
 func NewServer(port int, handler Handler) *Server {
 	p := goproxy.NewProxyHttpServer()
-	// enable verbose logging to help debug which requests are being intercepted
-	p.Verbose = true
+	// turned off verbose logging - it's way too noisy during normal use
+	p.Verbose = false
 
 	// Allow the proxy to intercept HTTPS traffic
 	p.OnRequest().HandleConnect(goproxy.AlwaysMitm)
@@ -109,5 +109,5 @@ func isVideoResponse(url, contentType string) bool {
 func (s *Server) Start() error {
 	addr := fmt.Sprintf(":%d", s.port)
 	log.Printf("[proxy] listening on %s", addr)
-	return http.ListenAndServe(addr, s.proxy) //nolint:gosec
+	return http.ListenAndServe(addr, s.proxy)
 }
