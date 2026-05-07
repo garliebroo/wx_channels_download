@@ -35,7 +35,8 @@ var videoURLPattern = regexp.MustCompile(`(https?://[^"\s]+\.mp4[^"\s]*|https?:/
 // WeChat Channels video request is detected.
 func NewServer(port int, handler Handler) *Server {
 	p := goproxy.NewProxyHttpServer()
-	p.Verbose = false
+	// enable verbose logging to help debug which requests are being intercepted
+	p.Verbose = true
 
 	// Allow the proxy to intercept HTTPS traffic
 	p.OnRequest().HandleConnect(goproxy.AlwaysMitm)
