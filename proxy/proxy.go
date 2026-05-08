@@ -78,7 +78,8 @@ func (s *Server) registerHandlers() {
 				log.Printf("[proxy] captured video URL: %s (size: %d bytes)", url, resp.ContentLength)
 			} else {
 				// size unknown usually means chunked transfer encoding - still worth capturing
-				log.Printf("[proxy] captured video URL: %s (size: unknown)", url)
+				// skipping the log line here to keep output clean
+				_ = info // suppress unused warning if handler is nil
 			}
 			if s.handler != nil {
 				s.handler(info)
@@ -109,6 +110,6 @@ func isVideoResponse(url, contentType string) bool {
 // server encounters an error.
 func (s *Server) Start() error {
 	addr := fmt.Sprintf(":%d", s.port)
-	log.Printf("[proxy] listening on %s", addr)
+	log.Printf("[proxy] starting proxy server on %s", addr)
 	return http.ListenAndServe(addr, s.proxy)
 }
