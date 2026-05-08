@@ -65,5 +65,6 @@ func ensureDir(path string) error {
 		return nil
 	}
 	// os.MkdirAll is a no-op if the directory already exists, so this is safe to call every run
-	return os.MkdirAll(path, 0750)
+	// using 0700 here instead of 0750 - no reason for group to have read access on my personal machine
+	return os.MkdirAll(path, 0700)
 }
