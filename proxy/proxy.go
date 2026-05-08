@@ -73,13 +73,12 @@ func (s *Server) registerHandlers() {
 				FileSize: resp.ContentLength,
 				Headers:  resp.Header.Clone(),
 			}
-			// only log if we actually have a size, avoids spammy -1 entries
+			// log all captures, including chunked ones - I want to see everything
 			if resp.ContentLength > 0 {
 				log.Printf("[proxy] captured video URL: %s (size: %d bytes)", url, resp.ContentLength)
 			} else {
-				// size unknown usually means chunked transfer encoding - still worth capturing
-				// skipping the log line here to keep output clean
-				_ = info // suppress unused warning if handler is nil
+				// chunked transfer - size unknown but still capturing
+				log.Printf("[proxy] captured video URL (chunked): %s", url)
 			}
 			if s.handler != nil {
 				s.handler(info)
@@ -110,6 +109,6 @@ func isVideoResponse(url, contentType string) bool {
 // server encounters an error.
 func (s *Server) Start() error {
 	addr := fmt.Sprintf(":%d", s.port)
-	log.Printf("[proxy] starting proxy server on %s", addr)
+	log.Printf("[proxy] starting on %s", addr)
 	return http.ListenAndServe(addr, s.proxy)
 }
