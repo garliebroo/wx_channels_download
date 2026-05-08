@@ -77,6 +77,7 @@ func (s *Server) registerHandlers() {
 			if resp.ContentLength > 0 {
 				log.Printf("[proxy] captured video URL: %s (size: %d bytes)", url, resp.ContentLength)
 			} else {
+				// size unknown usually means chunked transfer encoding - still worth capturing
 				log.Printf("[proxy] captured video URL: %s (size: unknown)", url)
 			}
 			if s.handler != nil {
