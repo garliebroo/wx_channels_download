@@ -64,5 +64,6 @@ func ensureDir(path string) error {
 	if path == "." || path == "" || path == "/" {
 		return nil
 	}
+	// os.MkdirAll is a no-op if the directory already exists, so this is safe to call every run
 	return os.MkdirAll(path, 0750)
 }
