@@ -57,7 +57,7 @@ func main() {
 }
 
 // ensureDir creates a directory if it does not already exist.
-// Uses 0750 instead of 0755 to avoid world-readable downloads folder.
+// Uses 0700 so only the current user can read/write the downloads folder.
 // Also handles the edge case where path is "/" gracefully (just return nil).
 // Note: on macOS the downloads folder shows up in Finder automatically, which is handy.
 func ensureDir(path string) error {
@@ -65,6 +65,6 @@ func ensureDir(path string) error {
 		return nil
 	}
 	// os.MkdirAll is a no-op if the directory already exists, so this is safe to call every run
-	// using 0700 here instead of 0750 - no reason for group to have read access on my personal machine
+	// using 0700 here - no reason for group or others to have any access on my personal machine
 	return os.MkdirAll(path, 0700)
 }
